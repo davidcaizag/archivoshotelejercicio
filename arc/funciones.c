@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "funciones.h"
 
-void cargarClientes(char clientes[][2][40]) {
-    FILE *file = fopen("clientes.txt", "r");
+void cargarClientes(char clientes[5][2][40]) {
+    FILE *file = fopen("clientes.txt", "a+");
     if (file == NULL) {
         printf("Error al abrir el archivo de clientes.\n");
         return;
@@ -15,7 +14,7 @@ void cargarClientes(char clientes[][2][40]) {
     fclose(file);
 }
 
-void guardarClientes(char clientes[][2][40]) {
+void guardarClientes(char clientes[5][2][40]) {
     FILE *file = fopen("clientes.txt", "w");
     if (file == NULL) {
         printf("Error al abrir el archivo de clientes.\n");
@@ -27,8 +26,8 @@ void guardarClientes(char clientes[][2][40]) {
     fclose(file);
 }
 
-void cargarHabitaciones(char habitaciones[][3][40], double precios[]) {
-    FILE *file = fopen("habitaciones.txt", "r");
+void cargarHabitaciones(char habitaciones[9][3][40], double precios[9]) {
+    FILE *file = fopen("habitaciones.txt", "a+");
     if (file == NULL) {
         printf("Error al abrir el archivo de habitaciones.\n");
         return;
@@ -39,8 +38,8 @@ void cargarHabitaciones(char habitaciones[][3][40], double precios[]) {
     fclose(file);
 }
 
-void cargarReservas(int reservas[][4]) {
-    FILE *file = fopen("reservas.txt", "r");
+void cargarReservas(int reservas[10][4]) {
+    FILE *file = fopen("reservas.txt", "a+");
     if (file == NULL) {
         printf("Error al abrir el archivo de reservas.\n");
         return;
@@ -51,7 +50,7 @@ void cargarReservas(int reservas[][4]) {
     fclose(file);
 }
 
-void guardarReservas(int reservas[][4]) {
+void guardarReservas(int reservas[10][4]) {
     FILE *file = fopen("reservas.txt", "w");
     if (file == NULL) {
         printf("Error al abrir el archivo de reservas.\n");
@@ -65,15 +64,15 @@ void guardarReservas(int reservas[][4]) {
 
 void buscarPorTamano(int *numHabitacion, char habitaciones[][3][40], double precios[]) {
     char tipo[40];
-    printf("Ingrese el tamaño de habitación que desea buscar: ");
+    printf("Ingrese el tamano de habitacion que desea buscar: ");
     scanf("%s", tipo);
-    printf("#\t\tTamaño\t\tHotel\t\t\tPrecio\n");
+    printf("#\t\tTamano\t\tHotel\t\t\tPrecio\n");
     for (int i = 0; i < 9; i++) {
         if (strcmp(habitaciones[i][1], tipo) == 0) {
             printf("%s\t\t%s\t\t%s\t\t%.2lf\n", habitaciones[i][0], habitaciones[i][1], habitaciones[i][2], precios[i]);
         }
     }
-    printf("Elija el número de habitación que desea reservar: ");
+    printf("Elija el numero de habitacion que desea reservar: ");
     scanf("%d", numHabitacion);
 }
 
@@ -85,24 +84,24 @@ void buscarHotel(int *numHabitacion, char habitaciones[][3][40], double precios[
 
     hotel[strcspn(hotel, "\n")] = '\0'; // Eliminar el salto de línea si existe
 
-    printf("#\t\tTamaño\t\tHotel\t\t\tPrecio\n");
+    printf("#\t\tTamano\t\tHotel\t\t\tPrecio\n");
     for (int i = 0; i < 9; i++) {
         if (strcmp(habitaciones[i][2], hotel) == 0) {
             printf("%s\t\t%s\t\t%s\t\t%.2lf\n", habitaciones[i][0], habitaciones[i][1], habitaciones[i][2], precios[i]);
         }
     }
-    printf("Elija el número de habitación que desea reservar: ");
+    printf("Elija el numero de habitacion que desea reservar: ");
     scanf("%d", numHabitacion);
 }
 
-void realizarReserva(int numHabitacion, char habitaciones[][3][40], char clientes[][2][40], int reservas[][4]) {
+void realizarReserva(int numHabitacion, char habitaciones[9][3][40], char clientes[5][2][40], int reservas[10][4]) {
     char cedula[40];
     char nombre[40];
     int encontrado = 0, diasReserva;
 
     printf("Ingrese su nombre:\n>> ");
     scanf("%s", nombre);
-    printf("Ingrese su número de cédula:\n>> ");
+    printf("Ingrese su numero de cedula:\n>> ");
     scanf("%s", cedula);
 
     for (int i = 0; i < 5; i++) {
@@ -115,11 +114,11 @@ void realizarReserva(int numHabitacion, char habitaciones[][3][40], char cliente
     }
 
     if (!encontrado) {
-        printf("No hay espacio para más clientes.\n");
+        printf("No hay espacio para mas clientes.\n");
         return;
     }
 
-    printf("Ingrese el número de días de la reserva:\n>> ");
+    printf("Ingrese el numero de dias de la reserva:\n>> ");
     scanf("%d", &diasReserva);
 
     for (int i = 0; i < 10; i++) {
@@ -130,23 +129,23 @@ void realizarReserva(int numHabitacion, char habitaciones[][3][40], char cliente
                     break;
                 }
             }
-            reservas[i][1] = numHabitacion; // número de habitación
-            reservas[i][2] = diasReserva;   // número de días de reserva
-            reservas[i][3] = 1;             // estado de la reserva (1: reservado, 2: pagado)
+            reservas[i][1] = numHabitacion; 
+            reservas[i][2] = diasReserva;
+            reservas[i][3] = 1; 
             guardarClientes(clientes);
             guardarReservas(reservas);
-            printf("Reserva realizada con éxito.\n");
+            printf("Reserva realizada con exito.\n");
             return;
         }
     }
 
-    printf("No hay espacio para más reservas.\n");
+    printf("No hay espacio para mas reservas.\n");
 }
 
-int buscarReservaPorCedula(int numReservas[], char clientes[][2][40], int reservas[][4]) {
+int buscarReservaPorCedula(int numReservas[], char clientes[][2][40], int reservas[10][4]) {
     char cedula[40];
     int count = 0;
-    printf("Ingrese su número de cédula:\n>> ");
+    printf("Ingrese su numero de cedula:\n>> ");
     scanf("%s", cedula);
 
     for (int i = 0; i < 10; i++) {
@@ -162,9 +161,9 @@ int buscarReservaPorCedula(int numReservas[], char clientes[][2][40], int reserv
     return count;
 }
 
-void imprimirReserva(int numReservas[], int count, char clientes[][2][40], int reservas[][4], char habitaciones[][3][40], double precios[]) {
+void imprimirReserva(int numReservas[], int count, char clientes[5][2][40], int reservas[10][4], char habitaciones[9][3][40], double precios[9]) {
     if (count == 0) {
-        printf("No se pueden imprimir las reservas: número de reservas inválido.\n");
+        printf("No se pueden imprimir las reservas: numero de reservas invalido.\n");
         return;
     }
 
@@ -183,19 +182,19 @@ void imprimirReserva(int numReservas[], int count, char clientes[][2][40], int r
         }
 
         printf("=== Detalles de la Reserva ===\n");
-        printf("Cliente: %s\n", clientes[indexCliente][0]); // nombre del cliente
-        printf("Cédula: %s\n", clientes[indexCliente][1]);  // cédula del cliente
-        printf("Habitación: %s\n", habitaciones[indexHabitacion][0]); // número de habitación
-        printf("Tipo: %s\n", habitaciones[indexHabitacion][1]); // tipo de habitación
-        printf("Hotel: %s\n", habitaciones[indexHabitacion][2]); // hotel
-        printf("Número de días: %d\n", numDias); // número de días de la reserva
-        printf("Estado: %s\n", estado); // estado de la reserva
+        printf("Cliente: %s\n", clientes[indexCliente][0]); 
+        printf("Cedula: %s\n", clientes[indexCliente][1]);
+        printf("Habitacion: %s\n", habitaciones[indexHabitacion][0]);
+        printf("Tipo: %s\n", habitaciones[indexHabitacion][1]);
+        printf("Hotel: %s\n", habitaciones[indexHabitacion][2]);
+        printf("Numero de dias: %d\n", numDias);
+        printf("Estado: %s\n", estado);
     }
 }
 
-void pagarReserva(int numReserva, int reservas[][4], char habitaciones[][3][40], double precios[]) {
+void pagarReserva(int numReserva, int reservas[10][4], char habitaciones[9][3][40], double precios[9]) {
     if (numReserva == -1) {
-        printf("No se puede pagar la reserva: número de reserva inválido.\n");
+        printf("No se puede pagar la reserva: numero de reserva invalido.\n");
         return;
     }
 
@@ -204,16 +203,15 @@ void pagarReserva(int numReserva, int reservas[][4], char habitaciones[][3][40],
     double precioTotal = precios[indexHabitacion - 1] * numDias;
 
     printf("El costo total de su reserva es: %.2lf\n", precioTotal);
-    printf("¿Desea pagar la reserva? (1: Sí, 2: No): ");
+    printf("Desea pagar? (1.SI 2.NO)\n>> ");
     int opcion;
     scanf("%d", &opcion);
 
     if (opcion == 1) {
-        reservas[numReserva][3] = 2; // Cambiar estado de la reserva a pagado
+        reservas[numReserva][3] = 2; 
         guardarReservas(reservas);
-        printf("Reserva pagada exitosamente.\n");
+        printf("Reserva pagada con exito.\n");
     } else {
-        printf("Reserva no pagada.\n");
+        printf("Pago cancelado.\n");
     }
 }
-
